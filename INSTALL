@@ -1,0 +1,16 @@
+Lingua::Segment::TH Installation
+
+# install via cpanminus
+cpanm Lingua::Segment::TH
+
+# install via CPAN shell
+cpan Lingua::Segment::TH
+
+# install via ActivePerl
+ppm install Lingua::Segment::TH
+
+# install manually
+perl Build.PL
+./Build
+./Build test
+./Build install
