@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use open qw( :encoding(UTF-8) :std );
 use parent 'Exporter';
-use Lingua::Segment::TH::DictIter;
+use Lingua::Segment::TH::Dict;
 
 our $VERSION = '0.01';
 our @EXPORT_OK = qw( segment segment_th );
@@ -37,7 +37,7 @@ sub get_dag {
     my @dag;
 
     for my $i (0 .. $len - 1) {
-        my $iter = Lingua::Segment::TH::DictIter::build_iter();
+        my $iter = _dict_iter();
 
         for my $j ($i .. $len - 1) {
             my $char   = substr $text, $j, 1;
@@ -167,6 +167,37 @@ sub _path_to_ranges {
     }
 
     return reverse @ranges;
+}
+
+sub _dict_iter {
+    my $dict   = Lingua::Segment::TH::Dict->new;
+    my $offset = 0;
+    my $start  = 0;
+    my $end    = scalar @{$dict->words};
+    my $state  = 'active';
+
+    return sub {
+        my ($char) = @_;
+
+        return $state
+            if $state eq 'invalid';
+
+        my $first = $dict->get_index('first', $char, $offset, $start, $end);
+
+        if (defined $first) {
+            $start = $first;
+            $end = $dict->get_index('last', $char, $offset, $start, $end) + 1;
+            $offset++;
+            $state = $offset == length $dict->words->[$first]
+                ? 'active boundary'
+                : 'active';
+        }
+        else {
+            $state = 'invalid';
+        }
+
+        return $state;
+    }
 }
 
 1;
