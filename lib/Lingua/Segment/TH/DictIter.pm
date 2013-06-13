@@ -2,71 +2,41 @@ package Lingua::Segment::TH::DictIter;
 
 use v5.8;
 use utf8;
-use Moo;
+use strict;
+use warnings;
 use Lingua::Segment::TH::Dict;
 
 our $VERSION = '0.01';
 
-has dict => (
-    is      => 'ro',
-    builder => sub { Lingua::Segment::TH::Dict->new },
-);
+sub build_iter {
+    my $dict   = Lingua::Segment::TH::Dict->new;
+    my $offset = 0;
+    my $start  = 0;
+    my $end    = scalar @{$dict->words};
+    my $state  = 'active';
 
-has start => (
-    is      => 'rw',
-    default => sub { 0 },
-);
+    return sub {
+        my ($char) = @_;
 
-has end => (
-    is      => 'rw',
-    lazy    => 1,
-    builder => sub { scalar @{shift->dict->words} },
-);
+        return $state
+            if $state eq 'invalid';
 
-has offset => (
-    is      => 'rw',
-    default => sub { 0 },
-);
+        my $first = $dict->get_index('first', $char, $offset, $start, $end);
 
-has state => (
-    is      => 'rw',
-    default => sub { 'active' },
-);
-
-sub walk {
-    my ($self, $char) = @_;
-
-    if ($self->state ne 'invalid') {
-        my $first = $self->dict->get_index(
-            'first',
-            $char,
-            $self->offset,
-            $self->start,
-            $self->end,
-        );
-
-        if (!defined $first) {
-            $self->state('invalid');
+        if (defined $first) {
+            $start = $first;
+            $end = $dict->get_index('last', $char, $offset, $start, $end) + 1;
+            $offset++;
+            $state = $offset == length $dict->words->[$first]
+                ? 'active boundary'
+                : 'active';
         }
         else {
-            $self->start($first);
-            my $last = $self->dict->get_index(
-                'last',
-                $char,
-                $self->offset,
-                $self->start,
-                $self->end,
-            );
-            $self->end($last + 1);
-            $self->offset($self->offset + 1);
-            my $len = length $self->dict->words->[$first];
-            $self->state(
-                $self->offset == $len ? 'active boundary' : 'active'
-            );
+            $state = 'invalid';
         }
-    }
 
-    return $self->state;
+        return $state;
+    }
 }
 
 1;

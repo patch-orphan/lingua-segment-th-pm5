@@ -37,11 +37,11 @@ sub get_dag {
     my @dag;
 
     for my $i (0 .. $len - 1) {
-        my $iter = Lingua::Segment::TH::DictIter->new;
+        my $iter = Lingua::Segment::TH::DictIter::build_iter();
 
         for my $j ($i .. $len - 1) {
             my $char   = substr $text, $j, 1;
-            my $status = $iter->walk($char);
+            my $status = $iter->($char);
 
             last if $status eq 'invalid';
             next if $status ne 'active boundary';
