@@ -10,9 +10,10 @@ This document describes Lingua::Segment::TH v0.01.
 
 =head1 SYNOPSIS
 
-    use Lingua::Segment::TH;
+    use Lingua::Segment::TH qw( segment_th );
 
-    ...
+    # 'กกต', 'ศรรม', 'ขจ'
+    @words = segment_th('กกตศรรมขจ');
 
 =head1 DESCRIPTION
 
@@ -22,7 +23,13 @@ This document describes Lingua::Segment::TH v0.01.
 
 =over
 
-=item * ...
+=item * L<thailang4r|https://github.com/veer66/thailang4r>
+
+=item * L<ThaiWordseg|http://thaiwordseg.sourceforge.net/>
+
+=item * L<libthai|http://linux.thai.net/projects/libthai>
+
+=item * L<Lingua::TH::Segmentation>
 
 =back
 

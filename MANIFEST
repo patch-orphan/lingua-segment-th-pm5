@@ -2,10 +2,13 @@ Build.PL
 Changes
 INSTALL
 lib/Lingua/Segment/TH.pm
+lib/Lingua/Segment/TH/Dict.pm
+lib/Lingua/Segment/TH/DictIter.pm
 LICENSE
 MANIFEST			This list of files
 README.pod
 t/00-load.t
+t/segment.t
 xt/author/changes.t
 xt/author/kwalitee.t
 xt/author/pod-coverage.t
