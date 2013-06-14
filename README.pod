@@ -40,8 +40,8 @@ of words.
 =head1 ACKNOWLEDGEMENTS
 
 This module is based on the Ruby library
-<thailang4r|https://github.com/veer66/thailang4r> by
-<Vee Satayamas|https://github.com/veer66>, who also authored ThaiWordseg.
+L<thailang4r|https://github.com/veer66/thailang4r> by
+L<Vee Satayamas|https://github.com/veer66>, who also authored ThaiWordseg.
 
 This module is brought to you by L<Shutterstock|http://www.shutterstock.com/>.
 Additional open source projects from Shutterstock can be found at
