@@ -3,7 +3,6 @@ Changes
 INSTALL
 lib/Lingua/Segment/TH.pm
 lib/Lingua/Segment/TH/Dict.pm
-lib/Lingua/Segment/TH/DictIter.pm
 LICENSE
 MANIFEST			This list of files
 README.pod

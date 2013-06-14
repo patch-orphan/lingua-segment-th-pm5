@@ -23,15 +23,26 @@ This document describes Lingua::Segment::TH v0.01.
 
 =over
 
-=item * L<thailang4r|https://github.com/veer66/thailang4r>
+=item * L<thailang4r|https://github.com/veer66/thailang4r> for Ruby
 
-=item * L<ThaiWordseg|http://thaiwordseg.sourceforge.net/>
+=item * L<PhlongTaIam|https://github.com/veer66/PhlongTaIam> for PHP
 
-=item * L<libthai|http://linux.thai.net/projects/libthai>
+=item * L<ThaiWordseg|http://thaiwordseg.sourceforge.net/> for C
 
-=item * L<Lingua::TH::Segmentation>
+=item * L<libthai|http://linux.thai.net/projects/libthai> for C
+
+=item * L<Lingua::TH::Segmentation> interface to ThaiWordseg for Perl
 
 =back
+
+=head1 ACKNOWLEDGEMENTS
+
+This module is based on <thailang4r|https://github.com/veer66/thailang4r> for
+Ruby by <Vee Satayamas|https://github.com/veer66>.
+
+This module is brought to you by L<Shutterstock|http://www.shutterstock.com/>.
+Additional open source projects from Shutterstock can be found at
+L<code.shutterstock.com|http://code.shutterstock.com/>.
 
 =head1 AUTHOR
 
