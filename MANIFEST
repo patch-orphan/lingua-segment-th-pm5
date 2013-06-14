@@ -5,7 +5,9 @@ lib/Lingua/Segment/TH.pm
 lib/Lingua/Segment/TH/Dict.pm
 LICENSE
 MANIFEST			This list of files
-README.pod
+META.json
+META.yml
+README
 t/00-load.t
 t/segment.t
 xt/author/changes.t

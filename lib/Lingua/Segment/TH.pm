@@ -239,12 +239,14 @@ This document describes Lingua::Segment::TH v0.01.
 
     use Lingua::Segment::TH qw( segment_th );
 
-    # 'กกต', 'ศรรม', 'ขจ'
-    @words = segment_th('กกตศรรมขจ');
+    @words = segment_th($phrase);
 
 =head1 DESCRIPTION
 
-...
+This module provides word segmentation (also known as word breaking) for the
+Thai language.  The C<segement> and C<segment_th> functions are synonymous and
+can optionally be exported.  They accept a string of Thai text and return a list
+of words.
 
 =head1 SEE ALSO
 
@@ -258,14 +260,15 @@ This document describes Lingua::Segment::TH v0.01.
 
 =item * L<libthai|http://linux.thai.net/projects/libthai> for C
 
-=item * L<Lingua::TH::Segmentation> interface to ThaiWordseg for Perl
+=item * L<Lingua::TH::Segmentation> for Perl (interface to ThaiWordseg)
 
 =back
 
 =head1 ACKNOWLEDGEMENTS
 
-This module is based on <thailang4r|https://github.com/veer66/thailang4r> for
-Ruby by <Vee Satayamas|https://github.com/veer66>.
+This module is based on the Ruby library
+<thailang4r|https://github.com/veer66/thailang4r> by
+<Vee Satayamas|https://github.com/veer66>, who also authored ThaiWordseg.
 
 This module is brought to you by L<Shutterstock|http://www.shutterstock.com/>.
 Additional open source projects from Shutterstock can be found at
