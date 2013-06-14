@@ -11,11 +11,9 @@ use Lingua::Segment::TH::Dict;
 our $VERSION = '0.01';
 our @EXPORT_OK = qw( segment segment_th );
 
-my $LINK_TYPE      = 2;
-my $POINTER        = 0;
-my $WEIGHT         = 1;
-my $PATH_UNK       = 2;
-my $PATH_LINK_TYPE = 3;
+my $POINTER      = 0;
+my $WEIGHT       = 1;
+my $PATH_UNKNOWN = 2;
 my ($START, $END)                 = 0..1;
 my ($FIRST, $LAST)                = 0..1;
 my ($INVALID, $ACTIVE, $BOUNDARY) = 0..2;
@@ -47,7 +45,7 @@ sub _dag {
             last if $status == $INVALID;
             next if $status != $BOUNDARY;
 
-            push @dag, [$i, $j + 1, 'dict'];
+            push @dag, [$i, $j + 1];
         }
     }
 
@@ -74,7 +72,7 @@ sub _dict_iter {
         my ($chr) = @_;
 
         return $state
-            if $state eq $INVALID;
+            if $state == $INVALID;
 
         my $first = _dict_index($dict, $chr, $offset, $start, $end, $FIRST);
 
@@ -114,10 +112,10 @@ sub _dict_index {
         else {
             $index = $i;
 
-            if ($pos_type eq $FIRST) {
+            if ($pos_type == $FIRST) {
                 $right = $i - 1;
             }
-            elsif ($pos_type eq $LAST) {
+            elsif ($pos_type == $LAST) {
                 $left  = $i + 1;
             }
         }
@@ -136,12 +134,12 @@ sub _ranges {
 }
 
 sub _build_index {
-    my ($dag, $pos) = @_;
+    my ($dag, $position) = @_;
     my %index;
 
     for my $range (@$dag) {
-        $index{$range->[$pos]} ||= [];
-        push @{$index{$range->[$pos]}}, $range;
+        $index{$range->[$position]} ||= [];
+        push @{$index{$range->[$position]}}, $range;
     }
 
     return \%index;
@@ -150,8 +148,7 @@ sub _build_index {
 sub _build_path {
     my ($length, $start_index, $end_index) = @_;
     my $left_boundary = 0;
-    my @path = (undef) x ($length + 1);
-    $path[0] = [0, 0, 0, 'unk'];
+    my @path = ([0, 0, 0]);
 
     for my $i (1 .. $length) {
         if ( $end_index->{$i} ) {
@@ -162,8 +159,7 @@ sub _build_path {
                     my $info = [
                         $start,
                         $path[$start][$WEIGHT] + 1,
-                        $path[$start][$PATH_UNK],
-                        $range->[$LINK_TYPE],
+                        $path[$start][$PATH_UNKNOWN],
                     ];
 
                     if ( !$path[$i] || _compare_path_info($info, $path[$i]) ) {
@@ -180,18 +176,16 @@ sub _build_path {
         if ( !$path[$i] && $start_index->{$i} ) {
             $path[$i] = [
                 $left_boundary,
-                $path[$left_boundary][$WEIGHT]   + 1,
-                $path[$left_boundary][$PATH_UNK] + 1,
-                'unk',
+                $path[$left_boundary][$WEIGHT]       + 1,
+                $path[$left_boundary][$PATH_UNKNOWN] + 1,
             ];
         }
     }
 
     $path[$length] ||= [
         $left_boundary,
-        $path[$left_boundary][$WEIGHT]   + 1,
-        $path[$left_boundary][$PATH_UNK] + 1,
-        'unk',
+        $path[$left_boundary][$WEIGHT]       + 1,
+        $path[$left_boundary][$PATH_UNKNOWN] + 1,
     ];
 
     return \@path;
@@ -200,8 +194,8 @@ sub _build_path {
 sub _compare_path_info {
     my ($path1, $path2) = @_;
 
-    return $path1->[$PATH_UNK] < $path2->[$PATH_UNK]
-        && $path1->[$WEIGHT]   < $path2->[$WEIGHT];
+    return $path1->[$PATH_UNKNOWN] < $path2->[$PATH_UNKNOWN]
+        && $path1->[$WEIGHT]       < $path2->[$WEIGHT];
 }
 
 sub _path_ranges {
@@ -213,7 +207,7 @@ sub _path_ranges {
         my $info  = $path->[$i];
         my $start = $info->[$POINTER];
 
-        push @ranges, [$start, $i, $info->[$PATH_LINK_TYPE]];
+        push @ranges, [$start, $i];
 
         $i = $start;
     }
