@@ -32,10 +32,9 @@ sub segment {
 
     for my $segment (split m{
         \b
-        \P{Alnum}*
-        \s+
-        (?: [\P{Alnum}\s]+ \s )?
-        \P{Alnum}*
+        (?!           [-‐‑'’] \b    # inner-word punctuation
+          | (?<= \d ) [.,:]   \d )  # inner-number punctuation
+        \P{Alnum}+
         \b
     }x, $text) {
         my $length = length $segment;
@@ -274,6 +273,8 @@ of words.
 =item * L<libthai|http://linux.thai.net/projects/libthai> for C
 
 =item * L<Lingua::TH::Segmentation> for Perl (interface to ThaiWordseg)
+
+=item * L<UAX #29: Unicode Text Segmentation|http://www.unicode.org/reports/tr29/>
 
 =back
 
