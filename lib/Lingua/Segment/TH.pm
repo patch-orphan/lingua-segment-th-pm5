@@ -20,15 +20,34 @@ my ($INVALID, $ACTIVE, $BOUNDARY) = 0..2;
 
 *segment_th = \&segment;
 
+# TODO: Unicode Text Segmentation for words from AUX #29
+# http://www.unicode.org/reports/tr29/#Word_Boundaries
+
 sub segment {
     my ($text) = @_;
-    my $length = length $text;
-    my @dag    = _dag($text, $length);
-    my @ranges = _ranges(\@dag, $length);
+    my @segments;
 
-    return map {
-        substr $text, $_->[$START], $_->[$END] - $_->[$START]
-    } @ranges;
+    $text =~ s{ ^ \P{Alnum}+   }{}x;
+    $text =~ s{   \P{Alnum}+ $ }{}x;
+
+    for my $segment (split m{
+        \b
+        \P{Alnum}*
+        \s+
+        (?: [\P{Alnum}\s]+ \s )?
+        \P{Alnum}*
+        \b
+    }x, $text) {
+        my $length = length $segment;
+        my @dag    = _dag($segment, $length);
+        my @ranges = _ranges(\@dag, $length);
+
+        push @segments, map {
+            substr $segment, $_->[$START], $_->[$END] - $_->[$START]
+        } @ranges;
+    }
+
+    return @segments;
 }
 
 sub _dag {
